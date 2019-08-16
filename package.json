@@ -1,0 +1,34 @@
+{
+  "name": "blinkenlights",
+  "version": "1.0.0",
+  "description": "A wall full of blinken lights.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wichern/blinkenlights.git"
+  },
+  "keywords": [
+    "led",
+    "node",
+    "embedded"
+  ],
+  "author": "Paul Wichern",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/wichern/blinkenlights/issues"
+  },
+  "homepage": "https://github.com/wichern/blinkenlights#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "gpio": "^0.2.10",
+    "moment": "^2.24.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
