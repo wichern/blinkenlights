@@ -17,8 +17,11 @@
 
 const express = require('express')
 const logger = require('./middleware/logger')
+const screen = require('./Screen')
 
 const app = express();
+
+var myScreen = new screen();
 
 app.use(logger);
 app.use(express.json()); // Body Parser

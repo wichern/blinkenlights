@@ -15,27 +15,10 @@
  * along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const pixels = [
-    {
-        r: 0,
-        g: 0,
-        b: 0
-    },
-    {
-        r: 0,
-        g: 0,
-        b: 0
-    },
-    {
-        r: 0,
-        g: 0,
-        b: 0
-    },
-    {
-        r: 0,
-        g: 0,
-        b: 0
-    }
-];
+const pixels = [];
+
+for (i = 0; i < 252; ++i) {
+    pixels.push({ r: 0, b: 0, g: 0});
+}
 
 module.exports = pixels;
