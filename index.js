@@ -17,20 +17,22 @@
 
 const express = require('express')
 const logger = require('./middleware/logger')
-const screen = require('./Screen')
-
+const Screen = require('./Screen')
+const PixelsApi = require('./routes/api/pixels')
 const app = express();
-
-var myScreen = new screen();
 
 app.use(logger);
 app.use(express.json()); // Body Parser
 app.use(express.urlencoded({ extended: false }));
-app.use('/api/pixels', require('./routes/api/pixels'))
+
+const spiDevice = process.env.spi || '/dev/spidev1.0'
+const screen = new Screen(21, 12, spiDevice);
+const pixelsApi = new PixelsApi(screen);
+app.use('/api/pixels', pixelsApi.router);
 
 app.get('/', (req, res) => {
     res.send('Hello, World!');
-})
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

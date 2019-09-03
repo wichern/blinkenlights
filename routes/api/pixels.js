@@ -16,68 +16,54 @@
  */
 
 const express = require('express');
-const pixels = require('../../Pixels');
-const router = express.Router();
 const gpio = require('gpio')
 
-router.get('/', (req, res) => res.json(pixels));
+class PixelsApi
+{
+    constructor(screen) {
+        this.screen = screen;
 
-router.get('/:id', (req, res) => {
-    id = parseInt(req.params.id);
+        this.router = express.Router();
 
-    if (id >= 0 && id < pixels.length) {
-        res.json(pixels[id]);
-    } else {
-        res.status(400).json({ msg: `Pixel ${req.params.id} not found!`});
-    }
-});
+        this.router.get('/', (req, res) => res.json(pixels));
 
-/* router.post('/', (req, res) => {
-    res.send(req.body);
-}); */
-
-router.put('/:id', (req, res) => {
-    id = parseInt(req.params.id);
-
-    if (!isNaN(id) && id >= 0 && id < pixels.length) {
-        if (!req.body.r || !req.body.g || !req.body.b) {
-            res.status(400).json({ msg: `r, g, b required!`});
-        } else {
-            r = parseInt(req.body.r);
-            g = parseInt(req.body.g);
-            b = parseInt(req.body.b);
-    
-            if (isNaN(r) || r < 0 || r > 255) {
-                res.status(400).json({ msg: `r needs to be a number in range [0 ... 255]!`});
-            } else if (isNaN(g) || g < 0 || g > 255) {
-                res.status(400).json({ msg: `g needs to be a number in range [0 ... 255]!`});
-            } else if (isNaN(b) || b < 0 || b > 255) {
-                res.status(400).json({ msg: `b needs to be a number in range [0 ... 255]!`});
+        this.router.get('/:id', (req, res) => {
+            id = parseInt(req.params.id);
+        
+            if (id >= 0 && id < this.screen.length) {
+                res.json(this.screen.getPixelAsJson(id));
             } else {
-                pixels[id] = { "r": r, "g": g, "b": b };
-                res.status(200).json({ msg: "ok" });
+                res.status(400).json({ msg: `Pixel ${req.params.id} not found!`});
             }
-        }
-    } else {
-        res.status(400).json({ msg: `Pixel ${req.params.id} not found!`});
+        });
+        
+        this.router.put('/:id', (req, res) => {
+            id = parseInt(req.params.id);
+        
+            if (!isNaN(id) && id >= 0 && id < this.screen.length) {
+                if (!req.body.r || !req.body.g || !req.body.b) {
+                    res.status(400).json({ msg: `r, g, b required!`});
+                } else {
+                    r = parseInt(req.body.r);
+                    g = parseInt(req.body.g);
+                    b = parseInt(req.body.b);
+            
+                    if (isNaN(r) || r < 0 || r > 255) {
+                        res.status(400).json({ msg: `r needs to be a number in range [0 ... 255]!`});
+                    } else if (isNaN(g) || g < 0 || g > 255) {
+                        res.status(400).json({ msg: `g needs to be a number in range [0 ... 255]!`});
+                    } else if (isNaN(b) || b < 0 || b > 255) {
+                        res.status(400).json({ msg: `b needs to be a number in range [0 ... 255]!`});
+                    } else {
+                        this.screen.setPixel(id, { "r": r, "g": g, "b": b });
+                        res.status(200).json({ msg: "ok" });
+                    }
+                }
+            } else {
+                res.status(400).json({ msg: `Pixel ${req.params.id} not found!`});
+            }
+        });
     }
-})
+}
 
-// Calling export with a pin number will export that header and return a gpio header instance
-var gpio4 = gpio.export(4, {
-    // When you export a pin, the default direction is out. This allows you to set
-    // the pin value to either LOW or HIGH (3.3V) from your program.
-    direction: gpio.DIRECTION.OUT,
-  
-    // set the time interval (ms) between each read when watching for value changes
-    // note: this is default to 100, setting value too low will cause high CPU usage
-    interval: 200,
-  
-    // Due to the asynchronous nature of exporting a header, you may not be able to
-    // read or write to the header right away. Place your logic in this ready
-    // function to guarantee everything will get fired properly
-    ready: function() {
-    }
- });
-
-module.exports = router;
+module.exports = PixelsApi;
